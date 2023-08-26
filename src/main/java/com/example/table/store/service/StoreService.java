@@ -8,8 +8,12 @@ import com.example.table.store.exception.StoreException;
 import com.example.table.store.repository.StoreRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StoreService {
@@ -30,6 +34,19 @@ public class StoreService {
         .detailAddress(detailAddress)
         .registeredAt(LocalDateTime.now())
         .build()));
+  }
+
+  public Page<StoreDto> findStore(String q, Pageable pageable) {
+
+    return storeRepository.findByStoreNameContainingIgnoreCase(
+        q, pageable).map(store -> StoreDto.builder()
+        .storeId(store.getId())
+        .storeName(store.getStoreName())
+        .description(store.getDescription())
+        .roadAddress(store.getRoadAddress())
+        .detailAddress(store.getDetailAddress())
+        .registeredAt(store.getRegisteredAt())
+        .build());
   }
 
 
