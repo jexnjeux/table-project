@@ -11,14 +11,14 @@ import lombok.Setter;
 @Setter
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class StoreException extends RuntimeException {
 
   private ErrorCode errorCode;
-  private String errorMessage;
 
   public StoreException(ErrorCode errorCode) {
+    super(errorCode.getDescription());
     this.errorCode = errorCode;
-    this.errorMessage = errorCode.getDescription();
+
   }
+
 }
