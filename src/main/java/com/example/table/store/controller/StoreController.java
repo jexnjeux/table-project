@@ -1,6 +1,7 @@
 package com.example.table.store.controller;
 
 import com.example.table.common.dto.PageResponse;
+import com.example.table.store.domain.Store;
 import com.example.table.store.dto.StoreDto;
 import com.example.table.store.dto.StoreInfo;
 import com.example.table.store.dto.StoreRequest;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +39,7 @@ public class StoreController {
   @GetMapping
   public PageResponse<StoreInfo> storeList(@RequestParam("q") String q,
       @PageableDefault() Pageable pageable) {
-    Page<StoreDto> storeDtoPage = storeService.findStore(q, pageable);
+    Page<StoreDto> storeDtoPage = storeService.findStores(q, pageable);
     List<StoreInfo> storeInfoList = storeDtoPage.getContent().stream().map(
         storeDto -> StoreInfo.builder()
             .storeName(storeDto.getStoreName())
@@ -50,6 +52,11 @@ public class StoreController {
             storeDtoPage.getTotalPages(), storeDtoPage.getTotalElements(), storeDtoPage.isFirst(),
             storeDtoPage.isLast());
 
+  }
+
+  @GetMapping("/{id}")
+  public Store storeDetail(@PathVariable Long id) {
+    return storeService.findStore(id);
   }
 
 }

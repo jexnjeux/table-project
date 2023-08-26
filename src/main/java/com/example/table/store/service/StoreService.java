@@ -1,6 +1,7 @@
 package com.example.table.store.service;
 
 import static com.example.table.store.type.ErrorCode.STORE_ALREADY_REGISTERED;
+import static com.example.table.store.type.ErrorCode.STORE_NOT_FOUND;
 
 import com.example.table.store.domain.Store;
 import com.example.table.store.dto.StoreDto;
@@ -36,7 +37,7 @@ public class StoreService {
         .build()));
   }
 
-  public Page<StoreDto> findStore(String q, Pageable pageable) {
+  public Page<StoreDto> findStores(String q, Pageable pageable) {
 
     return storeRepository.findByStoreNameContainingIgnoreCase(
         q, pageable).map(store -> StoreDto.builder()
@@ -48,6 +49,11 @@ public class StoreService {
         .registeredAt(store.getRegisteredAt())
         .build());
   }
+
+  public Store findStore(Long id) {
+    return storeRepository.findById(id).orElseThrow(() -> new StoreException(STORE_NOT_FOUND));
+  }
+
 
 
 }

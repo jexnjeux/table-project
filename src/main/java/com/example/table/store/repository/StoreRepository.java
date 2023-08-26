@@ -11,5 +11,4 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
   int countByStoreNameAndRoadAddress(String storeName, String roadAddress);
 
   Page<Store> findByStoreNameContainingIgnoreCase(String q, Pageable pageable);
-
 }
