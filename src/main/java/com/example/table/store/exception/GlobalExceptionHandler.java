@@ -1,6 +1,6 @@
 package com.example.table.store.exception;
 
-import static com.example.table.store.type.ErrorCode.MISSING_PARAMETER;
+import static com.example.table.common.type.ErrorCode.MISSING_PARAMETER;
 
 import com.example.table.common.dto.ResponseDto;
 import com.example.table.common.dto.ResponseHeader;

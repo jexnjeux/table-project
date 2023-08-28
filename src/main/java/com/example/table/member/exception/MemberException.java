@@ -1,23 +1,24 @@
-package com.example.table.store.exception;
+package com.example.table.member.exception;
 
 import com.example.table.common.type.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
-public class StoreException extends RuntimeException {
+public class MemberException extends RuntimeException {
 
   private ErrorCode errorCode;
 
-  public StoreException(ErrorCode errorCode) {
+  public MemberException(ErrorCode errorCode) {
     super(errorCode.getDescription());
     this.errorCode = errorCode;
-
   }
 
+  public MemberException(ErrorCode errorCode, String message) {
+    super(message);
+    this.errorCode = errorCode;
+  }
 }

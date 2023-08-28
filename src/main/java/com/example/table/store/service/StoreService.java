@@ -1,7 +1,7 @@
 package com.example.table.store.service;
 
-import static com.example.table.store.type.ErrorCode.STORE_ALREADY_REGISTERED;
-import static com.example.table.store.type.ErrorCode.STORE_NOT_FOUND;
+import static com.example.table.common.type.ErrorCode.STORE_ALREADY_REGISTERED;
+import static com.example.table.common.type.ErrorCode.STORE_NOT_FOUND;
 
 import com.example.table.store.domain.Store;
 import com.example.table.store.dto.StoreDto;
