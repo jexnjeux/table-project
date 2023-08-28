@@ -1,7 +1,6 @@
 package com.example.table.store.exception;
 
 import com.example.table.store.type.ErrorCode;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
