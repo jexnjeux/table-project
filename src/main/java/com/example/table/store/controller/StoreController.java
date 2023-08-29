@@ -4,15 +4,12 @@ import com.example.table.common.dto.PageResponse;
 import com.example.table.common.dto.ResponseDto;
 import com.example.table.common.dto.ResponseHeader;
 import com.example.table.store.domain.Store;
-import com.example.table.store.dto.StoreDto;
 import com.example.table.store.dto.StoreInfo;
 import com.example.table.store.dto.StoreRequest;
 import com.example.table.store.dto.StoreResponse;
 import com.example.table.store.service.StoreService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -42,23 +39,7 @@ public class StoreController {
   @GetMapping
   public ResponseEntity<?> getStoreList(@RequestParam("q") String q,
       @PageableDefault() Pageable pageable) {
-    Page<StoreDto> storeDtoPage = storeService.findStores(q, pageable);
-    List<StoreInfo> storeInfoList = storeDtoPage.getContent().stream().map(
-        storeDto -> StoreInfo.builder()
-            .storeName(storeDto.getStoreName())
-            .roadAddress(storeDto.getRoadAddress())
-            .build()
-    ).toList();
-
-    PageResponse<StoreInfo> pageResponse = new PageResponse<>();
-    pageResponse.setData(storeInfoList);
-    pageResponse.setPageNumber(storeDtoPage.getNumber());
-    pageResponse.setPageSize(storeDtoPage.getSize());
-    pageResponse.setPageSize(storeDtoPage.getSize());
-    pageResponse.setTotalPages(storeDtoPage.getTotalPages());
-    pageResponse.setTotalElements(storeDtoPage.getTotalElements());
-    pageResponse.setFirst(storeDtoPage.isFirst());
-    pageResponse.setLast(storeDtoPage.isLast());
+    PageResponse<StoreInfo> pageResponse = storeService.findStores(q, pageable);
 
     return ResponseEntity.ok().body(new ResponseDto(ResponseHeader.success(), pageResponse));
 
