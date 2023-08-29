@@ -19,7 +19,7 @@ public class MemberController {
   private final MemberService memberService;
 
   @PostMapping("/signup")
-  public MemberResponse memberRegister(@RequestBody @Valid MemberRegRequest memberRegRequest, Errors errors) {
+  public MemberResponse registerMember(@RequestBody @Valid MemberRegRequest memberRegRequest, Errors errors) {
     return MemberResponse.of(memberService.registerMember(memberRegRequest, errors));
   }
 }

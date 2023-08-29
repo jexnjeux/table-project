@@ -32,7 +32,7 @@ public class StoreController {
   private final StoreService storeService;
 
   @PostMapping
-  public StoreResponse storeAdd(@RequestBody @Valid StoreRequest storeRequest) {
+  public StoreResponse registerStore(@RequestBody @Valid StoreRequest storeRequest) {
 
     return StoreResponse.of(storeService.addStore(storeRequest.getStoreName(),
         storeRequest.getRoadAddress(), storeRequest.getDetailAddress(),
@@ -40,7 +40,7 @@ public class StoreController {
   }
 
   @GetMapping
-  public ResponseEntity<?> storeList(@RequestParam("q") String q,
+  public ResponseEntity<?> getStoreList(@RequestParam("q") String q,
       @PageableDefault() Pageable pageable) {
     Page<StoreDto> storeDtoPage = storeService.findStores(q, pageable);
     List<StoreInfo> storeInfoList = storeDtoPage.getContent().stream().map(
@@ -65,7 +65,7 @@ public class StoreController {
   }
 
   @GetMapping("/{id}")
-  public Store storeDetail(@PathVariable Long id) {
+  public Store getStoreDetail(@PathVariable Long id) {
     return storeService.findStore(id);
   }
 
