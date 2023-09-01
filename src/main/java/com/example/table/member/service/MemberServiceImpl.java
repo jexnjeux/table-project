@@ -57,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
         .memberType(memberRegRequest.getMemberType())
         .username(memberRegRequest.getUsername())
         .password(passwordEncoder.encode(memberRegRequest.getPassword()))
+        .name(memberRegRequest.getName())
         .phoneNumber(memberRegRequest.getPhoneNumber())
         .email(memberRegRequest.getEmail())
         .registeredAt(LocalDateTime.now())
@@ -86,9 +87,9 @@ public class MemberServiceImpl implements MemberService {
 
     UserDetails userDetails = loadUserByUsername(memberLoginRequest.getUsername());
 
-      if (!passwordEncoder.matches(memberLoginRequest.getPassword(), userDetails.getPassword())) {
-        throw new BadCredentialsException("로그인에 실패하였습니다.");
-      }
+    if (!passwordEncoder.matches(memberLoginRequest.getPassword(), userDetails.getPassword())) {
+      throw new BadCredentialsException("로그인에 실패하였습니다.");
+    }
 
     return userDetails;
   }

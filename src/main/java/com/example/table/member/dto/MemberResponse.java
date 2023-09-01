@@ -17,6 +17,7 @@ public class MemberResponse {
   private Long memberId;
   private MemberType memberType;
   private String username;
+  private String name;
   private String phoneNumber;
   private String email;
 
@@ -25,6 +26,7 @@ public class MemberResponse {
         .memberId(memberDto.getMemberId())
         .memberType(memberDto.getMemberType())
         .username(memberDto.getUsername())
+        .name(memberDto.getName())
         .phoneNumber(memberDto.getPhoneNumber())
         .email(memberDto.getEmail())
         .build();

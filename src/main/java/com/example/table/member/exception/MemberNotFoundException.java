@@ -6,7 +6,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Getter
 public class MemberNotFoundException extends UsernameNotFoundException {
+
   private ErrorCode errorCode;
+
+  public MemberNotFoundException(ErrorCode errorCode) {
+    super(errorCode.getDescription());
+    this.errorCode = errorCode;
+  }
 
   public MemberNotFoundException(ErrorCode errorCode, String msg) {
     super(msg);

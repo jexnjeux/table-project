@@ -14,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -28,16 +27,16 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeRequests(authorizeRequests ->
             authorizeRequests
-                .requestMatchers(new AntPathRequestMatcher("/api/partner/store")).hasRole("PARTNER")
-                .requestMatchers(new AntPathRequestMatcher("/api/user/**")).authenticated()
+//                .requestMatchers(new AntPathRequestMatcher("/api/partner/store")).hasRole("PARTNER")
+//                .requestMatchers(new AntPathRequestMatcher("/api/user/**")).authenticated()
                 .anyRequest().permitAll()
         ).exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(authenticationEntryPoint));
-    http.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
-        .defaultSuccessUrl("/")
-        .failureHandler(customAuthenticationFailureHandler())
-        .usernameParameter("username")
-        .passwordParameter("password")
-        .permitAll());
+//    http.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+//        .defaultSuccessUrl("/")
+//        .failureHandler(customAuthenticationFailureHandler())
+//        .usernameParameter("username")
+//        .passwordParameter("password")
+//        .permitAll());
     http.headers(headers -> headers
         .frameOptions(FrameOptionsConfig::sameOrigin
         )

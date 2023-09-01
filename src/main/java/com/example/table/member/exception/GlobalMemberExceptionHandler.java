@@ -24,8 +24,8 @@ public class GlobalMemberExceptionHandler {
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseDto httpMessageNotReadableExceptionHandler() {
-    return new ResponseDto(ResponseHeader.fail(HttpStatus.BAD_REQUEST.value(), MISSING_REQUEST_BODY));
+  public ResponseDto httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException e) {
+    return new ResponseDto(ResponseHeader.fail(HttpStatus.BAD_REQUEST.value(), MISSING_REQUEST_BODY, e.getMessage()));
   }
 
 

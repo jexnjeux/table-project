@@ -18,6 +18,7 @@ public class MemberDto {
   private Long memberId;
   private MemberType memberType;
   private String username;
+  private String name;
   private String phoneNumber;
   private String email;
 
@@ -26,6 +27,7 @@ public class MemberDto {
         .memberType(member.getMemberType())
         .memberId(member.getId())
         .username(member.getUsername())
+        .name(member.getName())
         .phoneNumber(member.getPhoneNumber())
         .email(member.getEmail())
         .build();
