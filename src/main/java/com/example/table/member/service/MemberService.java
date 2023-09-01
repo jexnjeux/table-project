@@ -1,13 +1,17 @@
 package com.example.table.member.service;
 
 import com.example.table.member.dto.MemberDto;
+import com.example.table.member.dto.MemberLoginRequest;
 import com.example.table.member.dto.MemberRegRequest;
-import org.springframework.stereotype.Service;
+import jakarta.validation.Valid;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.Errors;
 
+public interface MemberService extends UserDetailsService {
 
-@Service
-public interface MemberService {
+  MemberDto registerMember(@Valid MemberRegRequest memberRegRequest, Errors errors);
 
-  MemberDto registerMember(MemberRegRequest memberRegRequest, Errors errors);
+  UserDetails authenticate(MemberLoginRequest memberLoginRequest);
+
 }

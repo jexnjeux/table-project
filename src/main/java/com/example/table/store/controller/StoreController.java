@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/store")
+@RequestMapping("/api")
 public class StoreController {
 
   private final StoreService storeService;
 
-  @PostMapping
+  @PostMapping("/partner/store")
   public StoreResponse registerStore(@RequestBody @Valid StoreRequest storeRequest) {
 
     return StoreResponse.of(storeService.addStore(storeRequest.getStoreName(),
@@ -36,7 +36,7 @@ public class StoreController {
         storeRequest.getDescription()));
   }
 
-  @GetMapping
+  @GetMapping("/store")
   public ResponseEntity<?> getStoreList(@RequestParam("q") String q,
       @PageableDefault() Pageable pageable) {
     PageResponse<StoreInfo> pageResponse = storeService.findStores(q, pageable);
@@ -45,7 +45,7 @@ public class StoreController {
 
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/store/{id}")
   public Store getStoreDetail(@PathVariable Long id) {
     return storeService.findStore(id);
   }

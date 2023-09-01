@@ -19,7 +19,6 @@ public class MemberRegRequest {
 
   @NotBlank(message = "아이디는 필수 입력 사항입니다.")
   private String username;
-
   @NotBlank(message = "비밀번호는 필수 입력 사항입니다.")
   @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d).+$", message = "비밀번호는 영문과 숫자를 모두 포함해야 합니다.")
   private String password;

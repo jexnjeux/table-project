@@ -15,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -27,17 +30,25 @@ public class StoreService {
   public StoreDto addStore(String storeName, String roadAddress, String detailAddress,
       String description) {
 
-    if (storeRepository.countByStoreNameAndRoadAddress(storeName, roadAddress) > 0) {
-      throw new StoreException(STORE_ALREADY_REGISTERED);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication.getAuthorities().stream()
+        .anyMatch(auth -> auth.getAuthority().equals("PARTNER"))) {
+      if (storeRepository.countByStoreNameAndRoadAddress(storeName, roadAddress) > 0) {
+        throw new StoreException(STORE_ALREADY_REGISTERED);
+      }
+
+      return StoreDto.of(storeRepository.save(Store.builder()
+          .storeName(storeName)
+          .description(description)
+          .roadAddress(roadAddress)
+          .detailAddress(detailAddress)
+          .registeredAt(LocalDateTime.now())
+          .build()));
+    } else {
+      throw new BadCredentialsException("로그인을 해주세요.");
     }
 
-    return StoreDto.of(storeRepository.save(Store.builder()
-        .storeName(storeName)
-        .description(description)
-        .roadAddress(roadAddress)
-        .detailAddress(detailAddress)
-        .registeredAt(LocalDateTime.now())
-        .build()));
+
   }
 
   public PageResponse<StoreInfo> findStores(String q, Pageable pageable) {

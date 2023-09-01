@@ -37,5 +37,4 @@ public class Member {
   private String email;
   @CreatedDate
   private LocalDateTime registeredAt;
-
 }
