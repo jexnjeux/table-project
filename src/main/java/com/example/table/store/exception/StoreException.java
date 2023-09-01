@@ -17,7 +17,11 @@ public class StoreException extends RuntimeException {
   public StoreException(ErrorCode errorCode) {
     super(errorCode.getDescription());
     this.errorCode = errorCode;
+  }
 
+  public StoreException(ErrorCode errorCode, String message) {
+    super(message);
+    this.errorCode = errorCode;
   }
 
 }

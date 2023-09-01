@@ -1,5 +1,6 @@
 package com.example.table.store.service;
 
+import static com.example.table.common.type.ErrorCode.MISSING_REQUEST_BODY;
 import static com.example.table.common.type.ErrorCode.STORE_ALREADY_REGISTERED;
 import static com.example.table.common.type.ErrorCode.STORE_NOT_FOUND;
 
@@ -7,6 +8,7 @@ import com.example.table.common.dto.PageResponse;
 import com.example.table.store.domain.Store;
 import com.example.table.store.dto.StoreDto;
 import com.example.table.store.dto.StoreInfo;
+import com.example.table.store.dto.StoreRequest;
 import com.example.table.store.exception.StoreException;
 import com.example.table.store.repository.StoreRepository;
 import java.time.LocalDateTime;
@@ -15,10 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 @Slf4j
 @Service
@@ -27,26 +28,33 @@ public class StoreService {
 
   private final StoreRepository storeRepository;
 
-  public StoreDto addStore(String storeName, String roadAddress, String detailAddress,
-      String description) {
+  public StoreDto addStore(StoreRequest storeRequest, Errors errors) {
+    if (errors.hasErrors()) {
+      FieldError fieldError = errors.getFieldError();
+      if (fieldError != null) {
+        System.out.println(fieldError.getDefaultMessage());
+        throw new StoreException(MISSING_REQUEST_BODY, fieldError.getDefaultMessage());
+      }
+    }
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication.getAuthorities().stream()
-        .anyMatch(auth -> auth.getAuthority().equals("PARTNER"))) {
-      if (storeRepository.countByStoreNameAndRoadAddress(storeName, roadAddress) > 0) {
+//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//    if (authentication.getAuthorities().stream()
+//        .anyMatch(auth -> auth.getAuthority().equals("PARTNER"))) {
+      if (storeRepository.countByStoreNameAndRoadAddress(storeRequest.getStoreName(),
+          storeRequest.getRoadAddress()) > 0) {
         throw new StoreException(STORE_ALREADY_REGISTERED);
       }
 
       return StoreDto.of(storeRepository.save(Store.builder()
-          .storeName(storeName)
-          .description(description)
-          .roadAddress(roadAddress)
-          .detailAddress(detailAddress)
+          .storeName(storeRequest.getStoreName())
+          .description(storeRequest.getDescription())
+          .roadAddress(storeRequest.getRoadAddress())
+          .detailAddress(storeRequest.getDetailAddress())
           .registeredAt(LocalDateTime.now())
           .build()));
-    } else {
-      throw new BadCredentialsException("로그인을 해주세요.");
-    }
+//    } else {
+//      throw new BadCredentialsException("로그인을 해주세요.");
+//    }
 
 
   }

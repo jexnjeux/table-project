@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,11 +30,9 @@ public class StoreController {
   private final StoreService storeService;
 
   @PostMapping("/partner/store")
-  public StoreResponse registerStore(@RequestBody @Valid StoreRequest storeRequest) {
+  public StoreResponse registerStore(@RequestBody @Valid StoreRequest storeRequest, Errors erros) {
 
-    return StoreResponse.of(storeService.addStore(storeRequest.getStoreName(),
-        storeRequest.getRoadAddress(), storeRequest.getDetailAddress(),
-        storeRequest.getDescription()));
+    return StoreResponse.of(storeService.addStore(storeRequest, erros));
   }
 
   @GetMapping("/store")

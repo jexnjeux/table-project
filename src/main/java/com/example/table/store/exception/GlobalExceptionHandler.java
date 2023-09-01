@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(StoreException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseDto handleStoreException(StoreException e) {
-    return new ResponseDto(ResponseHeader.fail(HttpStatus.BAD_REQUEST.value(), e.getErrorCode()));
+    return new ResponseDto(ResponseHeader.fail(HttpStatus.BAD_REQUEST.value(), e.getErrorCode(), e.getMessage()));
   }
 
   @ExceptionHandler(MissingServletRequestParameterException.class)
