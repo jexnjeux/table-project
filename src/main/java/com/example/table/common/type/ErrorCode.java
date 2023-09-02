@@ -19,7 +19,9 @@ public enum ErrorCode {
   PASSWORD_NOT_CORRECT("비밀번호가 올바르지 않습니다."),
 
   FULLED_RESERVATION("해당 시간에는 예약이 불가합니다."),
-  ALREADY_RESERVED("예약이 존재합니다.");
+  ALREADY_RESERVED("예약이 존재합니다."),
+  TOO_EARLY_CHECKIN("방문 확인은 예약 시간 10분 전부터 가능합니다."),
+  RESERVATION_NOT_FOUND("예약이 존재하지 않습니다.");
 
   private final String description;
 

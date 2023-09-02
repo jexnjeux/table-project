@@ -4,21 +4,33 @@ import static com.example.table.common.type.ErrorCode.ALREADY_RESERVED;
 import static com.example.table.common.type.ErrorCode.FULLED_RESERVATION;
 import static com.example.table.common.type.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.table.common.type.ErrorCode.MISSING_REQUEST_BODY;
+import static com.example.table.common.type.ErrorCode.RESERVATION_NOT_FOUND;
 import static com.example.table.common.type.ErrorCode.STORE_NOT_FOUND;
+import static com.example.table.common.type.ErrorCode.TOO_EARLY_CHECKIN;
+import static com.example.table.reservation.type.ReservationStatus.CONFIRMED;
+import static com.example.table.reservation.type.ReservationStatus.RESERVED;
 
+import com.example.table.common.type.ErrorCode;
 import com.example.table.member.domain.Member;
 import com.example.table.member.exception.MemberNotFoundException;
 import com.example.table.member.repository.MemberRepository;
 import com.example.table.reservation.domain.Reservation;
+import com.example.table.reservation.domain.ReservationHistory;
+import com.example.table.reservation.dto.ReservationActionDto;
 import com.example.table.reservation.dto.ReservationDto;
 import com.example.table.reservation.dto.ReservationRequest;
 import com.example.table.reservation.exception.ReservationException;
+import com.example.table.reservation.repository.ReservationHistoryRepository;
 import com.example.table.reservation.repository.ReservationRepository;
+import com.example.table.reservation.type.ReservationStatus;
 import com.example.table.store.domain.Store;
 import com.example.table.store.exception.StoreException;
 import com.example.table.store.repository.StoreRepository;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -26,11 +38,13 @@ import org.springframework.validation.FieldError;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationServiceImp implements ReservationService {
 
   private final MemberRepository memberRepository;
   private final StoreRepository storeRepository;
   private final ReservationRepository reservationRepository;
+  private final ReservationHistoryRepository reservationHistoryRepository;
 
   @Transactional
   @Override
@@ -71,15 +85,34 @@ public class ReservationServiceImp implements ReservationService {
         .store(store)
         .guestCount(reservationRequest.getGuestCount())
         .reservationDate(reservationRequest.getReservationDate())
+        .status(RESERVED)
         .memo(reservationRequest.getMemo())
         .createdAt(LocalDateTime.now())
         .build();
 
-    member.addReservation(reservation);
+    memberRepository.save(member);
 
     return ReservationDto.of(reservationRepository.save(reservation));
   }
 
-//    throw new MemberException(LOGIN_FAILED, "로그인 정보가 없습니다.");
-//  }
+  @Override
+  public ReservationActionDto confirmReservation(String phoneNumber) {
+
+    Reservation reservation = reservationRepository.findByMemberPhoneNumber(
+            phoneNumber)
+        .orElseThrow(() -> new ReservationException(RESERVATION_NOT_FOUND));
+
+    Member member = memberRepository.findById(reservation.getMember().getId())
+        .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
+    Store store = storeRepository.findById(reservation.getStore().getId())
+        .orElseThrow(() -> new StoreException(STORE_NOT_FOUND));
+
+    return ReservationActionDto.of(reservationHistoryRepository.save(ReservationHistory.builder()
+        .status(CONFIRMED)
+        .guestCount(reservation.getGuestCount())
+        .member(member)
+        .store(store)
+        .build()));
+  }
+
 }
