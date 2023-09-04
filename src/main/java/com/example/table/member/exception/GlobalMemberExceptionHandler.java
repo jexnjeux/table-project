@@ -6,6 +6,7 @@ import static com.example.table.common.type.ErrorCode.MISSING_REQUEST_BODY;
 
 import com.example.table.common.dto.ResponseDto;
 import com.example.table.common.dto.ResponseHeader;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalMemberExceptionHandler {
 
@@ -25,6 +27,7 @@ public class GlobalMemberExceptionHandler {
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseDto httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException e) {
+    log.error("HttpMessageNotReadableException occurred: " + e.getMessage(), e);
     return new ResponseDto(ResponseHeader.fail(HttpStatus.BAD_REQUEST.value(), MISSING_REQUEST_BODY, e.getMessage()));
   }
 

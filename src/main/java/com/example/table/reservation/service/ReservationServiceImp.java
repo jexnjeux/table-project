@@ -100,8 +100,12 @@ public class ReservationServiceImp implements ReservationService {
     Store store = storeRepository.findById(reservation.getStore().getId())
         .orElseThrow(() -> new StoreException(STORE_NOT_FOUND));
 
+    reservation.setStatus(CONFIRMED);
+    reservationRepository.save(reservation);
+
     member.setHasActiveReservation(false);
     memberRepository.save(member);
+
 
     return ReservationActionDto.of(reservationHistoryRepository.save(ReservationHistory.builder()
         .status(CONFIRMED)

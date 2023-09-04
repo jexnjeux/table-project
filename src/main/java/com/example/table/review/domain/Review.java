@@ -1,9 +1,9 @@
-package com.example.table.reservation.domain;
+package com.example.table.review.domain;
 
 import com.example.table.member.domain.Member;
-import com.example.table.reservation.type.ReservationStatus;
+import com.example.table.reservation.domain.Reservation;
+import com.example.table.review.type.ReviewRating;
 import com.example.table.store.domain.Store;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -14,12 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +24,6 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
 @Entity
 @Getter
 @Setter
@@ -36,28 +31,26 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"member_id", "store_id"})})
-public class Reservation {
+public class Review {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private int guestCount;
-  private LocalDateTime reservationDate;
-  private String memo;
-  @Enumerated(EnumType.STRING)
-  private ReservationStatus status;
-  @Column(unique = true)
-  private String reservationKey;
+  private String title;
+  @Column(length = 1000)
+  private String contents;
   @CreatedDate
   private LocalDateTime createdAt;
+  @Enumerated(EnumType.STRING)
+  private ReviewRating rating;
+  @OneToOne
+  @JoinColumn(name = "reservation_id")
+  private Reservation reservation;
   @ManyToOne
   @JoinColumn(name = "member_id")
   private Member member;
   @ManyToOne
   @JoinColumn(name = "store_id")
   private Store store;
-  @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-  private List<ReservationHistory> reservationHistoryList = new ArrayList<>();
 
 }

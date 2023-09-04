@@ -16,6 +16,4 @@ public class GlobalReservationExceptionHandler {
     return new ResponseDto(ResponseHeader.fail(HttpStatus.CONFLICT.value(), e.getErrorCode(), e.getMessage()));
   }
 
-
-
 }
