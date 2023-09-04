@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,8 +31,8 @@ public class ReservationController {
 
   }
 
-  @PutMapping("/confirm/")
-  public ResponseEntity<?> confirmReservation(@RequestBody String phoneNumber){
+  @PutMapping("/confirm")
+  public ResponseEntity<?> confirmReservation(@RequestParam("phoneNumber") String phoneNumber){
     ReservationActionDto reservationActionDto = reservationService.confirmReservation(phoneNumber);
     return ResponseEntity.ok(new ResponseDto(ResponseHeader.success(), reservationActionDto));
   }

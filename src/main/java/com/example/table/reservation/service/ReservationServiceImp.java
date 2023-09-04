@@ -2,6 +2,7 @@ package com.example.table.reservation.service;
 
 import static com.example.table.common.type.ErrorCode.ALREADY_RESERVED;
 import static com.example.table.common.type.ErrorCode.FULLED_RESERVATION;
+import static com.example.table.common.type.ErrorCode.INVALID_RESERVATION_DATE;
 import static com.example.table.common.type.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.table.common.type.ErrorCode.MISSING_REQUEST_BODY;
 import static com.example.table.common.type.ErrorCode.RESERVATION_NOT_FOUND;
@@ -60,6 +61,11 @@ public class ReservationServiceImp implements ReservationService {
       throw new ReservationException(ALREADY_RESERVED);
     }
 
+    LocalDateTime currentTime = LocalDateTime.now();
+    if (reservationRequest.getReservationDate().isBefore(currentTime)) {
+      throw new ReservationException(INVALID_RESERVATION_DATE);
+    }
+
     if (reservationRepository.existsByStoreIdAndReservationDate(reservationRequest.getStoreId(),
         reservationRequest.getReservationDate())) {
       throw new ReservationException(FULLED_RESERVATION);
@@ -84,14 +90,16 @@ public class ReservationServiceImp implements ReservationService {
   @Override
   public ReservationActionDto confirmReservation(String phoneNumber) {
 
-    Reservation reservation = reservationRepository.findByMemberPhoneNumber(
-            phoneNumber)
+    Member member = memberRepository.findByPhoneNumber(phoneNumber)
+        .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
+
+    Reservation reservation = reservationRepository.findByMemberAndStatus(
+            member, RESERVED)
         .orElseThrow(() -> new ReservationException(RESERVATION_NOT_FOUND));
 
-    Member member = memberRepository.findById(reservation.getMember().getId())
-        .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     Store store = storeRepository.findById(reservation.getStore().getId())
         .orElseThrow(() -> new StoreException(STORE_NOT_FOUND));
+
     member.setHasActiveReservation(false);
     memberRepository.save(member);
 
@@ -100,7 +108,10 @@ public class ReservationServiceImp implements ReservationService {
         .guestCount(reservation.getGuestCount())
         .member(member)
         .store(store)
+        .confirmationDate(LocalDateTime.now())
+            .reservationDate(reservation.getReservationDate())
         .build()));
   }
+
 
 }

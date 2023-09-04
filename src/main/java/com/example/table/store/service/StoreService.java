@@ -32,30 +32,21 @@ public class StoreService {
     if (errors.hasErrors()) {
       FieldError fieldError = errors.getFieldError();
       if (fieldError != null) {
-        System.out.println(fieldError.getDefaultMessage());
         throw new StoreException(MISSING_REQUEST_BODY, fieldError.getDefaultMessage());
       }
     }
+    if (storeRepository.countByStoreNameAndRoadAddress(storeRequest.getStoreName(),
+        storeRequest.getRoadAddress()) > 0) {
+      throw new StoreException(STORE_ALREADY_REGISTERED);
+    }
 
-//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//    if (authentication.getAuthorities().stream()
-//        .anyMatch(auth -> auth.getAuthority().equals("PARTNER"))) {
-      if (storeRepository.countByStoreNameAndRoadAddress(storeRequest.getStoreName(),
-          storeRequest.getRoadAddress()) > 0) {
-        throw new StoreException(STORE_ALREADY_REGISTERED);
-      }
-
-      return StoreDto.of(storeRepository.save(Store.builder()
-          .storeName(storeRequest.getStoreName())
-          .description(storeRequest.getDescription())
-          .roadAddress(storeRequest.getRoadAddress())
-          .detailAddress(storeRequest.getDetailAddress())
-          .registeredAt(LocalDateTime.now())
-          .build()));
-//    } else {
-//      throw new BadCredentialsException("로그인을 해주세요.");
-//    }
-
+    return StoreDto.of(storeRepository.save(Store.builder()
+        .storeName(storeRequest.getStoreName())
+        .description(storeRequest.getDescription())
+        .roadAddress(storeRequest.getRoadAddress())
+        .detailAddress(storeRequest.getDetailAddress())
+        .registeredAt(LocalDateTime.now())
+        .build()));
 
   }
 

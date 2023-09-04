@@ -1,5 +1,6 @@
 package com.example.table.reservation.repository;
 
+import com.example.table.member.domain.Member;
 import com.example.table.reservation.domain.Reservation;
 import com.example.table.reservation.type.ReservationStatus;
 import java.time.LocalDateTime;
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Repository;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
   boolean existsByStoreIdAndReservationDate(Long storeId, LocalDateTime reservationDate);
-  Optional<Reservation> findByMemberPhoneNumber(String phoneNumber);
 
-  List<Reservation> findByReservationDateBeforeAndStatus(LocalDateTime currentTime, ReservationStatus status);
+  List<Reservation> findByReservationDateBeforeAndStatus(LocalDateTime currentTime,
+      ReservationStatus status);
+
+  Optional<Reservation> findByMemberAndStatus(Member member, ReservationStatus status);
+
 }
