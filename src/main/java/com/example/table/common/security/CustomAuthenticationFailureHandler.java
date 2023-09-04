@@ -1,4 +1,4 @@
-package com.example.table.common.exception;
+package com.example.table.common.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

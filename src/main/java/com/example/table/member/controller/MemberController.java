@@ -2,6 +2,7 @@ package com.example.table.member.controller;
 
 import com.example.table.common.dto.ResponseDto;
 import com.example.table.common.dto.ResponseHeader;
+import com.example.table.common.utils.JwtTokenProvider;
 import com.example.table.member.dto.MemberLoginDetails;
 import com.example.table.member.dto.MemberLoginRequest;
 import com.example.table.member.dto.MemberRegRequest;
@@ -19,10 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class MemberController {
 
   private final MemberServiceImpl memberService;
+  private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping("/signup")
   public MemberResponse registerMember(@RequestBody @Valid MemberRegRequest memberRegRequest,
@@ -32,8 +34,9 @@ public class MemberController {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody @Valid MemberLoginRequest memberLoginRequest) {
-    UserDetails userDetails = memberService.authenticate(memberLoginRequest);
+    UserDetails userDetails = memberService.loginMember(memberLoginRequest);
+    String jwt = jwtTokenProvider.generateJwtToken(userDetails.getUsername());
     return ResponseEntity.ok()
-        .body(new ResponseDto(ResponseHeader.success(), MemberLoginDetails.of(userDetails)));
+        .body(new ResponseDto(ResponseHeader.success(), MemberLoginDetails.of(userDetails, jwt)));
   }
 }

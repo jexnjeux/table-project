@@ -9,12 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -27,6 +29,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     ResponseDto responseDto = new ResponseDto(
         ResponseHeader.fail(HttpStatus.UNAUTHORIZED.value(), UNAUTHORIZED_ACCESS));
 
+    log.error("Unauthorized exception occurred: " + request.getRemoteUser());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
     objectMapper.writeValue(response.getWriter(), responseDto);
