@@ -3,6 +3,8 @@ package com.example.table.reservation.scheduler;
 import static com.example.table.reservation.type.ReservationStatus.CANCELED;
 import static com.example.table.reservation.type.ReservationStatus.RESERVED;
 
+import com.example.table.member.domain.Member;
+import com.example.table.member.repository.MemberRepository;
 import com.example.table.reservation.domain.Reservation;
 import com.example.table.reservation.domain.ReservationHistory;
 import com.example.table.reservation.repository.ReservationHistoryRepository;
@@ -24,6 +26,7 @@ public class CancelScheduler {
 
   private final ReservationRepository reservationRepository;
   private final ReservationHistoryRepository reservationHistoryRepository;
+  private final MemberRepository memberRepository;
 
 
   @Transactional
@@ -44,6 +47,11 @@ public class CancelScheduler {
           .reservationDate(reservation.getReservationDate())
           .cancellationDate(LocalDateTime.now())
           .build());
+
+      Member member = reservation.getMember();
+      member.setHasActiveReservation(false);
+      memberRepository.save(member);
+
       log.info("scheduler: " + reservation.getId());
     });
 

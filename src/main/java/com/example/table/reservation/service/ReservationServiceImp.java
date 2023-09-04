@@ -6,11 +6,9 @@ import static com.example.table.common.type.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.table.common.type.ErrorCode.MISSING_REQUEST_BODY;
 import static com.example.table.common.type.ErrorCode.RESERVATION_NOT_FOUND;
 import static com.example.table.common.type.ErrorCode.STORE_NOT_FOUND;
-import static com.example.table.common.type.ErrorCode.TOO_EARLY_CHECKIN;
 import static com.example.table.reservation.type.ReservationStatus.CONFIRMED;
 import static com.example.table.reservation.type.ReservationStatus.RESERVED;
 
-import com.example.table.common.type.ErrorCode;
 import com.example.table.member.domain.Member;
 import com.example.table.member.exception.MemberNotFoundException;
 import com.example.table.member.repository.MemberRepository;
@@ -22,13 +20,10 @@ import com.example.table.reservation.dto.ReservationRequest;
 import com.example.table.reservation.exception.ReservationException;
 import com.example.table.reservation.repository.ReservationHistoryRepository;
 import com.example.table.reservation.repository.ReservationRepository;
-import com.example.table.reservation.type.ReservationStatus;
 import com.example.table.store.domain.Store;
 import com.example.table.store.exception.StoreException;
 import com.example.table.store.repository.StoreRepository;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -56,16 +51,6 @@ public class ReservationServiceImp implements ReservationService {
       }
     }
 
-//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//    System.out.println(authentication);
-//    if (authentication.getAuthorities().stream()
-//        .anyMatch(auth -> auth.getAuthority().equals("USER"))) {
-//
-//      String username = authentication.getName();
-
-//      Member member = memberRepository.findByUsername(username)
-//          .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
-
     Member member = memberRepository.findById(reservationRequest.getMemberId())
         .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     Store store = storeRepository.findById(reservationRequest.getStoreId())
@@ -90,6 +75,7 @@ public class ReservationServiceImp implements ReservationService {
         .createdAt(LocalDateTime.now())
         .build();
 
+    member.setHasActiveReservation(true);
     memberRepository.save(member);
 
     return ReservationDto.of(reservationRepository.save(reservation));
@@ -106,6 +92,8 @@ public class ReservationServiceImp implements ReservationService {
         .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     Store store = storeRepository.findById(reservation.getStore().getId())
         .orElseThrow(() -> new StoreException(STORE_NOT_FOUND));
+    member.setHasActiveReservation(false);
+    memberRepository.save(member);
 
     return ReservationActionDto.of(reservationHistoryRepository.save(ReservationHistory.builder()
         .status(CONFIRMED)
