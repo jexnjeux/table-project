@@ -9,7 +9,7 @@
 
 ### Member 관련 API
 - 회원가입
-  - POST "/api/auth/signup"
+  - POST "/join"
   - 파라미터: 아이디, 비밀번호, 이름, 휴대폰번호, 이메일, 멤버 타입
   - 정책:
     - 아이디 중복 체크
@@ -18,7 +18,7 @@
    
       
 - 로그인
-  - POST "/api/auth/login
+  - POST "/login
   - 파라미터: 아이디, 비밀번호
   - 정책: 
     - 로그인 성공 시 Authorization header에 jwt 응답
