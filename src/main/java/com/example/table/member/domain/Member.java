@@ -37,6 +37,7 @@ public class Member {
   private Long id;
   @Enumerated(EnumType.STRING)
   private MemberType memberType;
+  private String role;
   private String username;
   private String password;
   private String name;

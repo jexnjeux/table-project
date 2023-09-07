@@ -17,6 +17,7 @@ public class MemberDto {
 
   private Long memberId;
   private MemberType memberType;
+  private String role;
   private String username;
   private String name;
   private String phoneNumber;
@@ -25,6 +26,7 @@ public class MemberDto {
   public static MemberDto of(Member member) {
     return MemberDto.builder()
         .memberType(member.getMemberType())
+        .role(member.getRole())
         .memberId(member.getId())
         .username(member.getUsername())
         .name(member.getName())

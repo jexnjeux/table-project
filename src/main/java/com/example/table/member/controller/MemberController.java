@@ -1,17 +1,10 @@
 package com.example.table.member.controller;
 
-import com.example.table.common.dto.ResponseDto;
-import com.example.table.common.dto.ResponseHeader;
-import com.example.table.common.utils.JwtTokenProvider;
-import com.example.table.member.dto.MemberLoginDetails;
-import com.example.table.member.dto.MemberLoginRequest;
 import com.example.table.member.dto.MemberRegRequest;
 import com.example.table.member.dto.MemberResponse;
 import com.example.table.member.service.MemberServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
   private final MemberServiceImpl memberService;
-  private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping("/signup")
   public MemberResponse registerMember(@RequestBody @Valid MemberRegRequest memberRegRequest,
@@ -32,11 +24,4 @@ public class MemberController {
     return MemberResponse.of(memberService.registerMember(memberRegRequest, errors));
   }
 
-  @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody @Valid MemberLoginRequest memberLoginRequest) {
-    UserDetails userDetails = memberService.loginMember(memberLoginRequest);
-    String jwt = jwtTokenProvider.generateJwtToken(userDetails.getUsername());
-    return ResponseEntity.ok()
-        .body(new ResponseDto(ResponseHeader.success(), MemberLoginDetails.of(userDetails, jwt)));
-  }
 }

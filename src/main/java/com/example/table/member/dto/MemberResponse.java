@@ -16,6 +16,7 @@ public class MemberResponse {
 
   private Long memberId;
   private MemberType memberType;
+  private String role;
   private String username;
   private String name;
   private String phoneNumber;
@@ -25,6 +26,7 @@ public class MemberResponse {
     return MemberResponse.builder()
         .memberId(memberDto.getMemberId())
         .memberType(memberDto.getMemberType())
+        .role(memberDto.getRole())
         .username(memberDto.getUsername())
         .name(memberDto.getName())
         .phoneNumber(memberDto.getPhoneNumber())

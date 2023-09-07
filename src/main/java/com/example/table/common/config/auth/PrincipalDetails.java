@@ -1,28 +1,31 @@
-package com.example.table.common.security;
+package com.example.table.common.config.auth;
 
 import com.example.table.member.domain.Member;
-import com.example.table.member.type.MemberType;
 import java.util.ArrayList;
 import java.util.Collection;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Slf4j
-@AllArgsConstructor
-public class UserDetailsImpl implements UserDetails {
 
-  private final Member member;
+public class PrincipalDetails implements UserDetails {
+
+  private Member member;
+
+  public PrincipalDetails(Member member) {
+    this.member = member;
+  }
+
+  public Member getMember() {
+    return member;
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    MemberType memberType = member.getMemberType();
-    log.info("getAuthorities memberType: " + memberType);
-    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(memberType.toString());
     Collection<GrantedAuthority> authorities = new ArrayList<>();
+    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(member.getRole());
     authorities.add(authority);
+
     return authorities;
   }
 

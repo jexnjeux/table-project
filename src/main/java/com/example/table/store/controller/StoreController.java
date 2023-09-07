@@ -30,9 +30,9 @@ public class StoreController {
   private final StoreService storeService;
 
   @PostMapping("/partner/store")
-  public StoreResponse registerStore(@RequestBody @Valid StoreRequest storeRequest, Errors erros) {
+  public StoreResponse registerStore(@RequestBody @Valid StoreRequest storeRequest, Errors errors) {
 
-    return StoreResponse.of(storeService.addStore(storeRequest, erros));
+    return StoreResponse.of(storeService.addStore(storeRequest, errors));
   }
 
   @GetMapping("/store")

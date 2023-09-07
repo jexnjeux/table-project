@@ -31,4 +31,5 @@ public class MemberRegRequest {
   @Email(message = "유효한 이메일 주소를 입력해 주세요.")
   private String email;
   private MemberType memberType = MemberType.USER;
+  private String role = "USER";
 }

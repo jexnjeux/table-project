@@ -22,4 +22,4 @@ spring:
       matching-strategy: ant_path_matcher
 
   jwt:
-    secret: dGFibGUtc3ByaW5nLWJvb3QtcHJvamVjdC1qd3Qtc2VjcmV0LWtleQo=
+    secret: dGFibGUtc3ByaW5nLWJvb3QtcHJvamVjdC1qd3Qtc2VjcmV0LWtleQo
